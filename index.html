@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concurso | De los Datos a la Memoria</title>
+  
+  <!-- Tipografías de Google Fonts: Cinzel Decorative, Space Grotesk y Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0c0414;
+      --bg-card: rgba(26, 11, 46, 0.85);
+      --cempasuchil: #FF8500;
+      --cempasuchil-light: #FFB300;
+      --rosa-mexicano: #E60067;
+      --morado-neon: #8B1E9B;
+      --turquesa: #00E5FF;
+      --blanco-hueso: #FDFBF7;
+      --gris-texto: #C7BED6;
+      --borde-dorado: rgba(255, 179, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(230, 0, 103, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(255, 133, 0, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(0, 229, 255, 0.08) 0%, transparent 50%);
+      color: var(--blanco-hueso);
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ==============================================================
+       ANIMACIÓN DE PÉTALOS DE CEMPASÚCHIL 3D EN EL FONDO (15 PÉTALOS)
+       ============================================================== */
+    .cempasuchil-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1; /* En el fondo detrás del contenido */
+      overflow: hidden;
+      perspective: 800px;
+    }
+
+    .petal {
+      position: absolute;
+      top: -40px;
+      border-radius: 50% 0 50% 50%;
+      background: radial-gradient(circle at 30% 30%, #FFE082, var(--cempasuchil-light) 45%, var(--cempasuchil) 85%);
+      box-shadow: 0 0 8px rgba(255, 133, 0, 0.35);
+      opacity: 0.85;
+      will-change: transform, top;
+      transform-style: preserve-3d;
+      animation-name: fall3D;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes fall3D {
+      0% {
+        top: -40px;
+        transform: translateX(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.85;
+      }
+      25% {
+        transform: translateX(35px) rotateX(90deg) rotateY(180deg) rotateZ(45deg);
+      }
+      50% {
+        transform: translateX(-30px) rotateX(180deg) rotateY(360deg) rotateZ(120deg);
+      }
+      75% {
+        transform: translateX(25px) rotateX(270deg) rotateY(180deg) rotateZ(210deg);
+      }
+      90% {
+        opacity: 0.75;
+      }
+      100% {
+        top: 105vh;
+        transform: translateX(-20px) rotateX(360deg) rotateY(0deg) rotateZ(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Configuración y desfasamiento aleatorio de los 15 pétalos */
+    .petal:nth-child(1)  { left: 4%;  width: 14px; height: 19px; animation-duration: 14s; animation-delay: 0s; }
+    .petal:nth-child(2)  { left: 11%; width: 18px; height: 23px; animation-duration: 16s; animation-delay: 3.5s; }
+    .petal:nth-child(3)  { left: 19%; width: 12px; height: 16px; animation-duration: 12s; animation-delay: 1.2s; }
+    .petal:nth-child(4)  { left: 26%; width: 16px; height: 21px; animation-duration: 17s; animation-delay: 6s; }
+    .petal:nth-child(5)  { left: 34%; width: 13px; height: 18px; animation-duration: 13.5s; animation-delay: 2.8s; }
+    .petal:nth-child(6)  { left: 42%; width: 20px; height: 25px; animation-duration: 18s; animation-delay: 7.5s; }
+    .petal:nth-child(7)  { left: 49%; width: 15px; height: 20px; animation-duration: 14.5s; animation-delay: 0.5s; }
+    .petal:nth-child(8)  { left: 56%; width: 17px; height: 22px; animation-duration: 15.5s; animation-delay: 4.2s; }
+    .petal:nth-child(9)  { left: 63%; width: 13px; height: 17px; animation-duration: 12.5s; animation-delay: 8.8s; }
+    .petal:nth-child(10) { left: 71%; width: 19px; height: 24px; animation-duration: 16.5s; animation-delay: 1.8s; }
+    .petal:nth-child(11) { left: 78%; width: 14px; height: 19px; animation-duration: 13s; animation-delay: 5.1s; }
+    .petal:nth-child(12) { left: 84%; width: 16px; height: 21px; animation-duration: 15s; animation-delay: 9.3s; }
+    .petal:nth-child(13) { left: 91%; width: 18px; height: 23px; animation-duration: 17.5s; animation-delay: 3s; }
+    .petal:nth-child(14) { left: 96%; width: 12px; height: 16px; animation-duration: 11.5s; animation-delay: 6.8s; }
+    .petal:nth-child(15) { left: 52%; width: 15px; height: 20px; animation-duration: 14s; animation-delay: 10.5s; }
+
+    /* ==============================================================
+       IMÁGENES FIJAS Y RESPONSIVIDAD DINÁMICA
+       ============================================================== */
+    .fixed-art {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      pointer-events: none;
+      filter: drop-shadow(0 0 25px rgba(255, 133, 0, 0.35));
+      transition: all 0.4s ease;
+    }
+
+    .fixed-art-left {
+      left: clamp(10px, 2.5vw, 40px);
+      width: clamp(140px, 13vw, 210px);
+    }
+
+    .fixed-art-right {
+      right: clamp(10px, 2.5vw, 40px);
+      width: clamp(150px, 14vw, 230px);
+    }
+
+    .fixed-art img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Adaptación en tablets y laptops pequeñas (768px a 1300px) */
+    @media (max-width: 1300px) and (min-width: 769px) {
+      .fixed-art-left {
+        left: 8px;
+        width: 10vw;
+        opacity: 0.35; /* No obstruye el texto pero decora los costados */
+      }
+      .fixed-art-right {
+        right: 8px;
+        width: 11vw;
+        opacity: 0.35;
+      }
+    }
+
+    /* Adaptación en móviles (<768px): Las imágenes se integran armónicamente en el encabezado */
+    @media (max-width: 768px) {
+      .fixed-art {
+        position: static;
+        transform: none;
+        display: inline-block;
+        width: 85px;
+        margin: 0.5rem 0.6rem;
+      }
+      .mobile-art-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    /* Cenefa de Papel Picado */
+    .papel-picado-banner {
+      width: 100%;
+      height: 38px;
+      background-repeat: repeat-x;
+      background-size: 140px 38px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 38"><path d="M0 0 L140 0 L140 28 Q105 38 70 28 Q35 38 0 28 Z" fill="%23E60067"/><circle cx="35" cy="14" r="5" fill="%230c0414"/><circle cx="105" cy="14" r="5" fill="%230c0414"/><path d="M60 14 Q70 6 80 14 Q70 22 60 14" fill="%23FFB300"/><rect x="15" y="6" width="6" height="6" fill="%2300E5FF"/><rect x="119" y="6" width="6" height="6" fill="%2300E5FF"/></svg>');
+      filter: drop-shadow(0 4px 10px rgba(230, 0, 103, 0.4));
+      position: relative;
+      z-index: 10;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Hero / Encabezado */
+    header.hero {
+      text-align: center;
+      padding: 2.5rem 1rem 3.5rem;
+      position: relative;
+    }
+
+    h1.main-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(2.3rem, 6vw, 4.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #FFF 15%, var(--cempasuchil-light) 50%, var(--rosa-mexicano) 95%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px rgba(255, 133, 0, 0.3);
+    }
+
+    p.subtitle {
+      font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+      color: var(--turquesa);
+      font-weight: 500;
+      max-width: 820px;
+      margin: 0 auto 2.5rem;
+      text-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+    }
+
+    .btn-cta {
+      display: inline-block;
+      background: linear-gradient(45deg, var(--rosa-mexicano), var(--cempasuchil));
+      color: #FFF;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 1rem 2.8rem;
+      border-radius: 50px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 8px 25px rgba(230, 0, 103, 0.45);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 12px 35px rgba(255, 133, 0, 0.6);
+    }
+
+    /* Secciones Generales */
+    section {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Títulos con degradado dorado, naranja y rosa */
+    h2.section-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.85rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFF 15%, var(--cempasuchil-light) 50%, var(--rosa-mexicano) 95%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 1px solid rgba(255, 133, 0, 0.25);
+      padding-bottom: 0.7rem;
+    }
+
+    h2.section-title span.title-icon {
+      -webkit-text-fill-color: initial;
+      display: inline-block;
+    }
+
+    h3.sub-title {
+      color: var(--turquesa);
+      font-size: 1.25rem;
+      margin: 1.5rem 0 0.8rem;
+    }
+
+    p, li {
+      color: var(--gris-texto);
+      font-size: 1.02rem;
+    }
+
+    ul, ol {
+      padding-left: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    strong {
+      color: var(--blanco-hueso);
+    }
+
+    /* Callouts y Cajas Especiales */
+    .info-callout {
+      background: rgba(0, 229, 255, 0.06);
+      border-left: 4px solid var(--turquesa);
+      padding: 1.2rem 1.4rem;
+      border-radius: 0 12px 12px 0;
+      margin: 1.2rem 0;
+    }
+
+    .privacy-notice {
+      background: rgba(230, 0, 103, 0.07);
+      border: 1px solid rgba(230, 0, 103, 0.3);
+      padding: 1.3rem;
+      border-radius: 12px;
+      font-style: italic;
+      margin: 1.5rem 0;
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .component-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.8rem;
+      transition: border-color 0.3s;
+    }
+
+    .component-box:hover {
+      border-color: var(--turquesa);
+    }
+
+    /* Tabla de Rúbrica */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    table.custom-table th, table.custom-table td {
+      padding: 1.1rem 1.4rem;
+    }
+
+    table.custom-table th {
+      background: rgba(26, 11, 46, 0.95);
+      color: var(--cempasuchil-light);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid var(--cempasuchil);
+    }
+
+    table.custom-table tr {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: background 0.2s;
+    }
+
+    table.custom-table tr:hover {
+      background: rgba(255, 133, 0, 0.05);
+    }
+
+    .weight-tag {
+      display: inline-block;
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      color: var(--rosa-mexicano);
+      background: rgba(230, 0, 103, 0.12);
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      border: 1px solid rgba(230, 0, 103, 0.3);
+    }
+
+    /* Línea de Tiempo del Calendario */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+
+    .timeline-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 1.2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .timeline-date {
+      font-family: 'Fira Code', monospace;
+      color: var(--turquesa);
+      font-weight: 600;
+      min-width: 190px;
+      line-height: 1.4;
+    }
+
+    .timeline-date small {
+      color: var(--cempasuchil-light);
+      font-size: 0.82rem;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .timeline-content {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .timeline-stage {
+      color: var(--blanco-hueso);
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Bloques de Premios en Sección 8 */
+    .prizes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .prize-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--borde-dorado);
+      border-radius: 16px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .prize-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--cempasuchil);
+    }
+
+    .prize-card.first {
+      border: 2px solid var(--cempasuchil-light);
+      background: rgba(255, 179, 0, 0.05);
+      box-shadow: 0 0 25px rgba(255, 179, 0, 0.2);
+    }
+
+    .badge-number {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cempasuchil), var(--rosa-mexicano));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel Decorative', cursive;
+      font-weight: 900;
+      font-size: 1.45rem;
+      margin: 0 auto 1.2rem;
+      color: #FFF;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .prize-card.first .badge-number {
+      background: linear-gradient(135deg, var(--cempasuchil-light), var(--cempasuchil));
+      color: #1a0826;
+    }
+
+    .prize-amount {
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--cempasuchil-light);
+      margin-bottom: 0.4rem;
+    }
+
+    /* Modal de Entrega */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(12, 4, 20, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background: #180a2c;
+      border: 1px solid var(--cempasuchil);
+      box-shadow: 0 0 40px rgba(255, 133, 0, 0.3);
+      border-radius: 20px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.2rem;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.4rem;
+      font-size: 1.8rem;
+      color: var(--gris-texto);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 1.3rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.92rem;
+      color: var(--cempasuchil-light);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      color: var(--blanco-hueso);
+      font-family: inherit;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--turquesa);
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--gris-texto);
+      font-size: 0.95rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    footer a {
+      color: var(--turquesa);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animación de pétalos de cempasúchil 3D en el fondo -->
+  <div class="cempasuchil-container" aria-hidden="true">
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+  </div>
+
+  <!-- Cenefa Papel Picado Superior -->
+  <div class="papel-picado-banner"></div>
+
+  <!-- Imágenes con posicionamiento adaptativo para escritorio, tablets y móviles -->
+  <aside class="fixed-art fixed-art-left" aria-hidden="true">
+    <img src="img/Concurso.png" alt="Concurso Día de Muertos">
+  </aside>
+
+  <aside class="fixed-art fixed-art-right" aria-hidden="true">
+    <img src="img/Catrina.png" alt="Catrina IA">
+  </aside>
+
+  <div class="container">
+    <!-- Header Hero -->
+    <header class="hero">
+      <h1 class="main-title">De los Datos a la Memoria</h1>
+      <p class="subtitle">Concurso de Visualización interactiva de Datos e IA Generativa en el marco del Día de Muertos</p>
+
+      <button class="btn-cta" onclick="openRegistrationModal()">Registrar Proyecto</button>
+    </header>
+
+    <!-- 1. Descripción y Propósito -->
+    <section id="descripcion">
+      <h2 class="section-title"><span class="title-icon">💀</span> 1. Descripción y Propósito del Reto</h2>
+      <p>
+        La Facultad de Computación y Sistemas convoca a los estudiantes de esta facultad a participar en el concurso <strong>"De los Datos a la Memoria"</strong>. Este certamen fusiona el <strong>Análisis de Datos</strong>, el diseño de la <strong>Visualización de Datos Interactiva</strong> con el arte del <strong>Storytelling digital e Inteligencia Artificial Generativa</strong>, en el marco de la tradición del <strong>Día de Muertos</strong>.
+      </p>
+      <div class="info-callout">
+        El reto consiste en tomar un conjunto de datos genealógicos, realizar un análisis exploratorio y analítico, construir un tablero o visualización interactiva del árbol familiar y, finalmente, asumir la perspectiva y voz en primera persona de un descendiente vivo de la <strong>Generación 0</strong> para rendir homenaje y recordar la memoria de sus antepasados fallecidos (de Generación 0, 1 o 2) mediante una pieza audiovisual generada con herramientas de IA.
+      </div>
+    </section>
+
+    <!-- 2. Perfil y Modalidad -->
+    <section id="perfil">
+      <h2 class="section-title"><span class="title-icon">🎓</span> 2. Perfil de los Participantes y Modalidad</h2>
+      <ul>
+        <li><strong>Participantes:</strong> Convocatoria abierta exclusivamente a estudiantes inscritos en cualquier programa académico de la Facultad de Computación y Sistemas (desde primer semestre en adelante).</li>
+        <li><strong>Modalidad:</strong> <strong>Individual</strong>.</li>
+        <li><strong>Cupo:</strong> Registro abierto a toda la comunidad de la facultad.</li>
+      </ul>
+    </section>
+
+    <!-- 3. Dataset de Trabajo -->
+    <section id="dataset">
+      <h2 class="section-title"><span class="title-icon">🗄️</span> 3. El Dataset de Trabajo: Especificaciones y Aviso Ético</h2>
+      <p>Los participantes trabajarán con el archivo oficial del concurso: <code>Dataset_Genealógico_México_Concurso</code>.</p>
+      
+      <h3 class="sub-title">Estructura del Archivo</h3>
+      <ol>
+        <li><strong>personas:</strong> Tabla de nodos con 57 registros que abarcan tres generaciones (Gen 2: abuelos y colaterales; Gen 1: padres y tíos; Gen 0: Ego, hermanos y primos), documentando demografía, fechas de nacimiento/defunción, causas médicas, ciudades de origen y trayectoria, oficios e historias personales.</li>
+        <li><strong>relaciones:</strong> Tabla de aristas (200 registros de grafo dirigido) con vínculos de filiación (<code>PADRE_DE</code>, <code>MADRE_DE</code>), conyugales (<code>CONYUGE_DE</code>) y de fraternidad (<code>HERMANO_DE</code>).</li>
+        <li><strong>diccionario y readme:</strong> Documentación formal de tipos de datos, llaves foráneas y reglas genealógicas del sistema.</li>
+      </ol>
+
+      <div class="privacy-notice">
+        <strong>Nota sobre Privacidad y Naturaleza de los Datos:</strong><br>
+        El presente conjunto de datos es 100% sintético y ficticio, diseñado exclusivamente con propósitos académicos y de competencia. No contiene información personal identificable de individuos vivos o reales, por lo que no vulnera normativas de privacidad y sus resultados pueden ser analizados, publicados, compartidos y presentados en foros públicos abiertos.
+      </div>
+    </section>
+
+    <!-- 4. Requerimientos Técnicos -->
+    <section id="requerimientos">
+      <h2 class="section-title"><span class="title-icon">🛠️</span> 4. Requerimientos Técnicos y Fases del Proyecto</h2>
+      <p>El proyecto se divide en dos componentes interconectados:</p>
+
+      <div class="component-grid">
+        <div class="component-box">
+          <h3 class="sub-title">Componente A: Visualización Interactiva (Dashboard)</h3>
+          <p>Construir una interfaz o tablero interactivo que permita explorar el árbol genealógico familiar y sus métricas.</p>
+          <br>
+          <p><strong>Herramientas permitidas (Plataforma libre):</strong></p>
+          <ul>
+            <li><em>Python:</em> Plotly, Dash, Streamlit, PyVis, Bokeh, Panel.</li>
+            <li><em>Web / JS:</em> D3.js, Observable, Sigma.js, Cytoscape.js.</li>
+            <li><em>BI / No-code:</em> Power BI, Tableau Public, Looker Studio.</li>
+            <li><em>R:</em> Shiny, visNetwork, networkD3.</li>
+          </ul>
+          <p><em>Requisito funcional:</em> Navegar interactivamente por las generaciones (2, 1 y 0), identificar parentescos y filtrar/resaltar integrantes fallecidos y sus trayectorias.</p>
+        </div>
+
+        <div class="component-box">
+          <h3 class="sub-title">Componente B: Storytelling e IA Generativa</h3>
+          <p>Creación de una narrativa audiovisual emotiva centrada en la memoria viva.</p>
+          <br>
+          <ul>
+            <li><strong>El Rol:</strong> Adoptar la identidad de una persona de la <strong>Generación 0</strong> (ej. <em>Sofía Martínez Rojas - P044</em> o cualquiera de sus hermanos o primos vivos).</li>
+            <li><strong>El Homenaje:</strong> Relatar el recuerdo o tributo de Día de Muertos hacia sus antepasados fallecidos de cualquier generación.</li>
+            <li><strong>Pieza Audiovisual:</strong> Crear un video de <strong>30 segundos exactos</strong> generado con herramientas de IA (Runway, Pika, Kling, Luma, Midjourney, Stable Diffusion, ElevenLabs, Suno, etc.), plasmando la esencia emocional, la ofrenda y el legado biográfico.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Entregables Requeridos -->
+    <section id="entregables">
+      <h2 class="section-title"><span class="title-icon">📦</span> 5. Entregables Requeridos</h2>
+      <p>La entrega se realizará de manera digital e incluirá dos piezas audiovisuales y los accesos a los recursos técnicos:</p>
+      <br>
+      <ol>
+        <li>
+          <strong>Video Explicativo del Proyecto (Duración máxima: 3 minutos):</strong>
+          <ul>
+            <li><em>Minuto 0:00 a 1:30 (Visualización de Datos):</em> Demostración del análisis realizado, hallazgos clave y recorrido interactivo por el dashboard o grafo genealógico.</li>
+            <li><em>Minuto 1:30 a 3:00 (Storytelling e IA):</em> Explicación del personaje asumido, narrativa construida, prompts utilizados y arquitectura de herramientas de IA generativa empleadas, conclusiones, aprendizajes y reflexiones sobre la preservación de la memoria a través de los datos.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Video Conmemorativo de IA Generativa (Duración: 30 segundos):</strong>
+          <p>Pieza audiovisual independiente generada con IA que plasma el tributo al estilo Día de Muertos. Puede incluirse dentro del video de 3 minutos o entregarse como archivo/enlace separado en alta definición.</p>
+        </li>
+        <li>
+          <strong>Enlaces a Prompts:</strong>
+          <p>Documentación de prompts dentro de un documento de texto o link público del proyecto.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 6. Rúbrica de Evaluación -->
+    <section id="rubrica">
+      <h2 class="section-title"><span class="title-icon">⚖️</span> 6. Rúbrica de Evaluación</h2>
+      <p>El jurado evaluará los proyectos priorizando el análisis técnico y la capacidad analítica, equilibrado con la calidad estética y narrativa:</p>
+
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Ponderación</th>
+              <th>Aspectos Evaluados</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Visualización e Interactividad</strong></td>
+              <td><span class="weight-tag">30%</span></td>
+              <td>Usabilidad, dinamismo e interactividad del dashboard; claridad en la representación de jerarquías y linajes; diseño visual efectivo y facilidad para explorar nodos y aristas.</td>
+            </tr>
+            <tr>
+              <td><strong>Storytelling y Apego al Dataset</strong></td>
+              <td><span class="weight-tag">30%</span></td>
+              <td>Coherencia entre la historia narrada y los datos reales de las personas homenajeadas (oficios, ciudades, causas de deceso); adopción convincente del personaje de Generación 0 y emotividad de la tradición.</td>
+            </tr>
+            <tr>
+              <td><strong>Calidad y Dominio de IA Generativa</strong></td>
+              <td><span class="weight-tag">25%</span></td>
+              <td>Originalidad técnica y estética del video de 30 segundos; complejidad y articulación en los prompts de generación de imagen, voz, animación o música.</td>
+            </tr>
+            <tr>
+              <td><strong>Capacidad de Síntesis y Comunicación</strong></td>
+              <td><span class="weight-tag">15%</span></td>
+              <td>Claridad expositiva en el video explicativo de 3 minutos, respeto a los tiempos límites y presentación profesional.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. Calendario Oficial -->
+    <section id="calendario">
+      <h2 class="section-title"><span class="title-icon">📅</span> 7. Calendario Oficial</h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">8 de octubre de 2026</div>
+          <div class="timeline-content">
+            <div class="timeline-stage">Publicación de Convocatoria y Apertura de Registro</div>
+            <p>Difusión en medios de la facultad y acceso al dataset oficial.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">15 y 16 de octubre</div>
+          <div class="timeline-content">
+            <div class="timeline-stage">Sesión Informativa y resolución de Dudas (Opcional)</div>
+            <p>Sesión virtual de resolución de dudas técnicas sobre el dataset.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">
+            26 de octubre<br>
+            <small>(23:59 hrs)</small>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-stage">Cierre de Recepción de Entregables</div>
+            <p>Límite improrrogable de entrega mediante Formulario de Google.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">27 de octubre</div>
+          <div class="timeline-content">
+            <div class="timeline-stage">Evaluación del Jurado</div>
+            <p>Revisión por el comité académico de profesores.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">29 de octubre</div>
+          <div class="timeline-content">
+            <div class="timeline-stage">Publicación de Finalistas y Premiación</div>
+            <p>Presentación de proyectos destacados y entrega de premios.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Premios y Reconocimientos -->
+    <section id="premios">
+      <h2 class="section-title"><span class="title-icon">🏆</span> 8. Premios y Reconocimientos</h2>
+      
+      <div class="prizes-grid">
+        <!-- Primer Lugar -->
+        <div class="prize-card first">
+          <div class="badge-number">1</div>
+          <div class="prize-amount">$1,500 MXN</div>
+          <h3>Primer Lugar</h3>
+          <p>Tarjeta de Regalo Amazon</p>
+        </div>
+
+        <!-- Segundo Lugar -->
+        <div class="prize-card">
+          <div class="badge-number">2</div>
+          <div class="prize-amount">$1,000 MXN</div>
+          <h3>Segundo Lugar</h3>
+          <p>Tarjeta de Regalo Amazon</p>
+        </div>
+
+        <!-- Tercer Lugar -->
+        <div class="prize-card">
+          <div class="badge-number">3</div>
+          <div class="prize-amount">$500 MXN</div>
+          <h3>Tercer Lugar</h3>
+          <p>Tarjeta de Regalo Amazon</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Mecánica de Envío -->
+    <section id="mecanica">
+      <h2 class="section-title"><span class="title-icon">📬</span> 9. Mecánica de Registro y Envío de Entregables</h2>
+      <p>
+        Las entregas deberán realizarse a través del <strong>Formulario de Google Oficial del Concurso</strong> antes del <strong>26 de octubre a las 23:59 hrs</strong>.
+      </p>
+      <br>
+      <p>El formulario solicitará los siguientes campos obligatorios:</p>
+      <ol>
+        <li><strong>Datos del Participante:</strong> Nombre completo, matrícula escolar, correo institucional y semestre en curso.</li>
+        <li><strong>Identidad del Proyecto:</strong> Título del proyecto, identificador y nombre del personaje de Generación 0 adoptado (ej. <em>Sofía Martínez Rojas - P044</em>) y lista de familiares homenajeados.</li>
+        <li><strong>Plataformas Utilizadas:</strong> Herramientas de visualización (ej. Streamlit, Power BI, D3.js) y herramientas de IA empleadas (ej. Runway, ElevenLabs, Midjourney).</li>
+        <li><strong>Enlaces a Entregables:</strong> Enlace al video explicativo (máx. 3 min), enlace al video conmemorativo de IA (30 seg) y enlace al dashboard o repositorio de código.</li>
+        <li><strong>Declaración de Prompts:</strong> Documentación adjunta con los prompts principales utilizados.</li>
+      </ol>
+      <br>
+      <div style="text-align: center;">
+        <button class="btn-cta" onclick="openRegistrationModal()">Abrir Formulario de Entrega</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>Dudas o aclaraciones técnicas sobre el dataset o las bases con el Comité Organizador:</p>
+      <p>✉️ <a href="mailto:alejandro.jarero@upaep.mx">alejandro.jarero@upaep.mx</a></p>
+      <br>
+      <p>© 2026 Facultad de Computación y Ciencia de Datos</p>
+    </footer>
+  </div>
+
+  <!-- Cenefa Papel Picado Inferior -->
+  <div class="papel-picado-banner" style="transform: rotate(180deg);"></div>
+
+  <!-- Modal Interactivo del Formulario de Registro -->
+  <div class="modal-overlay" id="registrationModal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeRegistrationModal()">&times;</button>
+      <h2 style="color: var(--cempasuchil); font-family: 'Cinzel Decorative', cursive; margin-bottom: 0.5rem;">Entrega de Proyecto</h2>
+      <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--gris-texto);">Formulario Oficial | De los Datos a la Memoria</p>
+
+      <form id="submissionForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="fullName">Nombre Completo *</label>
+          <input type="text" id="fullName" required placeholder="Ej. Ana Paola Morales Cruz">
+        </div>
+
+        <div class="form-group">
+          <label for="studentId">Matrícula Escolar y Semestre *</label>
+          <input type="text" id="studentId" required placeholder="Ej. 3409812 - 5to Semestre">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo Institucional *</label>
+          <input type="email" id="email" required placeholder="usuario@upaep.mx">
+        </div>
+
+        <div class="form-group">
+          <label for="character">Personaje de Gen 0 Asumido *</label>
+          <input type="text" id="character" required placeholder="Ej. P044 - Sofía Martínez Rojas">
+        </div>
+
+        <div class="form-group">
+          <label for="honored">Familiares Fallecidos Homenajeados (IDs y Nombres) *</label>
+          <textarea id="honored" rows="2" required placeholder="Ej. P001 Carlos Martínez, P037 Mauricio Domínguez"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tools">Herramientas Empleadas (Visualización e IA) *</label>
+          <input type="text" id="tools" required placeholder="Ej. Streamlit, NetworkX, Midjourney, Runway Gen-3, ElevenLabs">
+        </div>
+
+        <div class="form-group">
+          <label for="video3min">Enlace a Video Explicativo (Máx. 3 minutos) *</label>
+          <input type="url" id="video3min" required placeholder="https://youtube.com/... o Drive público">
+        </div>
+
+        <div class="form-group">
+          <label for="video30sec">Enlace a Video Conmemorativo IA (30 segundos) *</label>
+          <input type="url" id="video30sec" required placeholder="https://drive.google.com/...">
+        </div>
+
+        <div class="form-group">
+          <label for="codeLink">Enlace al Dashboard / Repositorio *</label>
+          <input type="url" id="codeLink" required placeholder="https://github.com/... o enlace de visualización">
+        </div>
+
+        <div class="form-group">
+          <label for="prompts">Declaración / Enlace de Prompts *</label>
+          <textarea id="prompts" rows="2" required placeholder="Pega aquí los prompts principales o el enlace a la documentación"></textarea>
+        </div>
+
+        <button type="submit" class="btn-cta" style="width: 100%; border-radius: 8px;">Enviar Registro de Proyecto</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openRegistrationModal() {
+      document.getElementById('registrationModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRegistrationModal() {
+      document.getElementById('registrationModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('registrationModal');
+      if (event.target === modal) {
+        closeRegistrationModal();
+      }
+    };
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      alert("¡Registro simulado con éxito!\n\nPara el despliegue final, vincula este formulario con el Google Form oficial o tu backend de recepción de datos.");
+      closeRegistrationModal();
+    }
+  </script>
+</body>
+</html>
