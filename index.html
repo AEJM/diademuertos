@@ -144,6 +144,11 @@
       }
     }
 
+    /* Arte móvil integrado al hero (oculto en desktop) */
+    .mobile-hero-art {
+      display: none;
+    }
+
     /* Cenefa de Papel Picado */
     .papel-picado-banner {
       width: 100%;
@@ -671,12 +676,41 @@
         border-radius: 16px;
       }
 
+      /* Desactivar imágenes laterales fijas */
       .fixed-art {
         display: none !important;
       }
 
+      /* Hero de ilustraciones centralizadas con desvanecimiento */
+      .mobile-hero-art {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
+        will-change: opacity, transform;
+        transition: opacity 0.1s linear, transform 0.1s linear;
+      }
+
+      .mobile-art-title {
+        width: 82%;
+        max-width: 320px;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 0 20px rgba(255, 133, 0, 0.45));
+      }
+
+      .mobile-art-catrina {
+        width: 68%;
+        max-width: 250px;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 0 25px rgba(230, 0, 103, 0.35));
+      }
+
       header.hero {
-        padding: 2rem 0.5rem 1.8rem;
+        padding: 1rem 0.5rem 1.8rem;
         text-align: center;
       }
 
@@ -711,30 +745,47 @@
         min-width: 100%;
       }
 
+      /* Reestructuración vertical de patrocinadores */
       .sponsors-signature {
-        padding: 1.4rem 1.2rem;
+        padding: 1.8rem 1.2rem;
       }
 
       .sponsors-row {
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1.8rem;
       }
 
       .sponsors-left {
-        justify-content: center;
-        gap: 1.5rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.8rem;
+        width: 100%;
       }
 
       .sponsors-right {
         margin-left: 0;
+        width: 100%;
         justify-content: center;
       }
 
       .sponsor-logo {
-        height: 40px;
-        max-width: 135px;
+        height: auto;
+        max-height: 70px;
+        max-width: 190px;
+      }
+
+      /* Orden explícito de logos: 1° Telcel, 2° Pepsi, 3° Mesa Directiva */
+      .sponsor-telcel {
+        order: 1;
+      }
+
+      .sponsor-pepsi {
+        order: 2;
+      }
+
+      .sponsors-right {
+        order: 3;
       }
     }
   </style>
@@ -775,13 +826,20 @@
   <div class="container">
     <!-- Header Hero Centrado -->
     <header class="hero">
+      
+      <!-- Ilustraciones Móviles: Concurso arriba y Catrina abajo con desvanecimiento -->
+      <div class="mobile-hero-art" id="mobileHeroArt" aria-hidden="true">
+        <img src="./img/Concurso.png" alt="Concurso Día de Muertos" class="mobile-art-title">
+        <img src="./img/Catrina.png" alt="Catrina IA" class="mobile-art-catrina">
+      </div>
+
       <h1 class="main-title">De los Datos a la Memoria</h1>
       <p class="subtitle">Concurso de Visualización interactiva de Datos e IA Generativa en el marco del Día de Muertos</p>
     </header>
 
     <!-- 1. Descripción y Propósito -->
     <section id="descripcion">
-      <h2 class="section-title"><span class="title-icon">💀</span> 1. Descripción y Propósito del Reto</h2>
+      <h2 class="section-title"><span class="title-icon">💀</span>1. Descripción y Propósito del Reto</h2>
       <p>
         La Facultad de Computación y Ciencia de Datos, con el apoyo de la Mesa Directiva de Estudiantes, te invita a formar parte del concurso <strong>"De los Datos a la Memoria"</strong>, dirigido a estudiantes de esta Facultad. Un reto donde la visualización de datos y el storytelling digital se unen para revivir nuestras tradiciones de Día de Muertos. Más que una competencia, es el pretexto perfecto para experimentar y crear con inteligencia artificial generativa de forma ética, responsable y divertida, demostrando cómo la tecnología en tus manos puede contar historias con profunda sensibilidad humana y apego a las mejores prácticas.
       </p>
@@ -1062,8 +1120,8 @@
         <span class="sponsors-label">Patrocinadores y Aliados Oficiales</span>
         <div class="sponsors-row">
           <div class="sponsors-left">
-            <img src="./img/logoTelcel.png" alt="Logo Telcel" class="sponsor-logo">
-            <img src="./img/logoPepsi.png" alt="Logo Pepsi" class="sponsor-logo">
+            <img src="./img/logotelcel.png" alt="Logo Telcel" class="sponsor-logo sponsor-telcel">
+            <img src="./img/logoPepsi.png" alt="Logo Pepsi" class="sponsor-logo sponsor-pepsi">
           </div>
           <div class="sponsors-right">
             <img src="./img/logoMesa.png" alt="Logo Mesa Directiva de Estudiantes" class="sponsor-logo">
@@ -1081,5 +1139,26 @@
   <!-- Cenefa Papel Picado Inferior -->
   <div class="papel-picado-banner" style="transform: rotate(180deg);"></div>
 
+  <!-- Script para el desvanecimiento fluido al hacer scroll en móvil -->
+  <script>
+    (function() {
+      const heroArt = document.getElementById('mobileHeroArt');
+      if (!heroArt) return;
+
+      const fadeDistance = 280; // Distancia en px recorrida para llegar a opacidad 0
+
+      window.addEventListener('scroll', () => {
+        if (window.innerWidth <= 768) {
+          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+          const factor = Math.max(0, 1 - scrollY / fadeDistance);
+          heroArt.style.opacity = factor.toFixed(2);
+          heroArt.style.transform = `translateY(${Math.min(scrollY * 0.25, 60)}px) scale(${Math.max(0.92, factor)})`;
+        } else {
+          heroArt.style.opacity = '1';
+          heroArt.style.transform = 'none';
+        }
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
